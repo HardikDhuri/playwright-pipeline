@@ -15,7 +15,7 @@ playwright-poc/
 │   ├── public/
 │   │   ├── client.js           # browser behavior for the mock app
 │   │   └── styles.css          # mock app styling
-│   └── server.ts               # local mock app + API server
+│   └── server.tsx              # local mock app + API server
 ├── pages/                      # Page Object Models
 │   ├── LoginPage.ts
 │   ├── InventoryPage.ts
@@ -57,7 +57,7 @@ npx playwright show-report             # view HTML report
 ## Mock backend
 
 The Playwright config defaults `baseURL` to `http://127.0.0.1:3000` and starts
-`mock/server.ts` automatically for test runs. That server uses `json-server` for
+`mock/server.tsx` automatically for test runs. That server uses `json-server` for
 API data under `/api` and serves a small local UI that mirrors the selectors the
 tests expect.
 
