@@ -35,7 +35,27 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium firefox
 
+      - name: Start mock backend
+        run: |
+          nohup npm run mock:serve > mock-server.log 2>&1 &
+          echo $! > mock-server.pid
+
+          for attempt in {1..30}; do
+            if curl --silent --fail http://127.0.0.1:3000/healthz >/dev/null; then
+              exit 0
+            fi
+
+            sleep 1
+          done
+
+          echo "Mock backend failed to start"
+          cat mock-server.log
+          exit 1
+
       - name: Run Playwright tests (shard ${{ matrix.shardIndex }}/${{ matrix.shardTotal }})
+        env:
+          PLAYWRIGHT_BASE_URL: http://127.0.0.1:3000
+          PLAYWRIGHT_USE_MOCK_SERVER: 'false'
         run: |
           npx playwright test \
             --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}

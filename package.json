@@ -1,12 +1,17 @@
 {
   "name": "playwright-saucedemo-poc",
   "version": "1.0.0",
-  "description": "Parallel Playwright tests for SauceDemo on GitHub Actions",
+  "description": "Parallel Playwright tests with a local mock backend on GitHub Actions",
   "scripts": {
+    "mock:serve": "ts-node mock/server.ts",
     "test": "playwright test",
     "test:report": "playwright show-report"
   },
   "devDependencies": {
-    "@playwright/test": "^1.44.0"
+    "@playwright/test": "^1.44.0",
+    "@types/node": "^25.9.1",
+    "json-server": "^0.17.4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
   }
 }
