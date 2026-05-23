@@ -23,14 +23,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Install pnpm globally
+        run: npm install -g pnpm@latest
+
+      - name: Verify pnpm installation
+        run: pnpm --version
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: pnpm
-
-      - name: Install pnpm globally
-        run: npm install -g pnpm@latest
 
 
       - name: Enable Corepack & pnpm
@@ -116,9 +119,6 @@ jobs:
         with:
           node-version: 20
           cache: pnpm
-
-      - name: Install pnpm globally
-        run: npm install -g pnpm@latest
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
