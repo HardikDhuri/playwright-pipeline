@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Parallel Playwright tests with a local mock backend on GitHub Actions",
   "scripts": {
-    "mock:serve": "ts-node -r tsconfig-paths/register mock/server.ts",
+    "mock:serve": "pnpm ts-node -r tsconfig-paths/register mock/server.ts",
     "test": "playwright test",
     "test:report": "playwright show-report"
   },

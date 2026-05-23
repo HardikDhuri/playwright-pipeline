@@ -27,17 +27,22 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
+          cache: pnpm
+
+      - name: Enable Corepack & pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@latest --activate
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium firefox
+        run: pnpm exec playwright install --with-deps chromium firefox
 
       - name: Start mock backend
         run: |
-          nohup npm run mock:serve > mock-server.log 2>&1 &
+          nohup pnpm run mock:serve > mock-server.log 2>&1 &
           echo $! > mock-server.pid
 
           for attempt in {1..30}; do
@@ -57,7 +62,7 @@ jobs:
           PLAYWRIGHT_BASE_URL: http://127.0.0.1:3000
           PLAYWRIGHT_USE_MOCK_SERVER: 'false'
         run: |
-          npx playwright test \
+          pnpm exec playwright test \
             --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
 
       - name: Upload blob report
@@ -85,10 +90,15 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
+          cache: pnpm
+
+      - name: Enable Corepack & pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@latest --activate
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Download all blob reports
         uses: actions/download-artifact@v4
@@ -98,7 +108,7 @@ jobs:
           merge-multiple: true
 
       - name: Merge into HTML report
-        run: npx playwright merge-reports --reporter html ./all-blob-reports
+        run: pnpm exec playwright merge-reports --reporter html ./all-blob-reports
 
       - name: Upload merged HTML report
         uses: actions/upload-artifact@v4
