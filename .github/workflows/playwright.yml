@@ -15,16 +15,25 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false          # keep other shards running even if one fails
-          node-version: 20
-          cache: pnpm
+      matrix:
+        shardIndex: [1, 2, 3]
+        shardTotal: [3]
 
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Enable Corepack & pnpm
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: pnpm
+
+      - name: Install pnpm globally
+        run: npm install -g pnpm@latest
+
+
+      - name: Enable Corepack & pnpm
         run: |
           corepack enable
           corepack prepare pnpm@latest --activate
@@ -99,15 +108,17 @@ jobs:
         with:
           path: ~/.pnpm-store
           key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: pnpm
-        with:
-          node-version: 20
-          cache: pnpm
+
+      - name: Install pnpm globally
+        run: npm install -g pnpm@latest
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
